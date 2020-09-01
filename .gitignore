@@ -2,11 +2,7 @@
 /dict-revised.json
 /dict.sqlite3
 
-# Secret
 /.env
-
-# Node
 /node_modules/
-
-# Local notes
 /NOTES
+.vercel
