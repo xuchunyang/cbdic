@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>cbdic</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        line-height: 1.5;
+        max-width: 750px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      a:link,
+      a:visited {
+        color: #6262f3;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      pre.output {
+        text-align: left;
+        font-size: 1.2em;
+        background-color: #cacaca;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>查询《<a href="http://dict.revised.moe.edu.tw/cbdic/index.html">重編國語辭典修訂本</a>》</h1>
+    <form>
+      <label for="q">输入字或词：</label>
+      <input id="q" type="text" required>
+      <button>查找</button>
+    </form>
+    <pre class="output"></pre>
+    <script>
+      const output = document.querySelector(".output");
+      document.querySelector("form").onsubmit = async e => {
+        e.preventDefault();
+        const q = document.querySelector("#q").value;
+        output.textContent = `Searching ${q} ...`;
+        try {
+          const resp = await fetch("api/get?q=" + q);
+          const json = await resp.json();
+          delete json._id;
+          output.textContent = JSON.stringify(json, null, 2);
+        } catch (e) {
+          output.textContent = `Error: ${e.message}`;
+        }
+      }
+    </script>
+  </body>
+</html>
