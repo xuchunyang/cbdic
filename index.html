@@ -39,16 +39,31 @@
     <h1>查询《<a href="http://dict.revised.moe.edu.tw/cbdic/index.html">重編國語辭典修訂本</a>》</h1>
     <form>
       <label for="q">输入字或词：</label>
-      <input id="q" type="text" required>
+      <input id="q" type="text" value="美" required>
       <button>查找</button>
     </form>
     <pre class="output"></pre>
     <script>
       const output = document.querySelector(".output");
-      document.querySelector("form").onsubmit = async e => {
-        e.preventDefault();
-        const q = document.querySelector("#q").value;
+      const input = document.querySelector("#q");
+
+      loadState();
+      search();
+
+      function loadState() {
+        const q = localStorage.getItem("q");
+        if (q) {
+          input.value = q;
+        }
+      }
+
+      async function search(e) {
+        if (e) {
+          e.preventDefault();
+        }
+        const q = input.value;
         output.textContent = `Searching ${q} ...`;
+        localStorage.setItem("q", q);
         try {
           const resp = await fetch("api/get?q=" + q);
           const json = await resp.json();
@@ -58,6 +73,8 @@
           output.textContent = `Error: ${e.message}`;
         }
       }
+
+      document.querySelector("form").onsubmit = search;
     </script>
   </body>
 </html>
